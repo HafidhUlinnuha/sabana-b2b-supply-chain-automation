@@ -35,7 +35,7 @@ procurement cycle end-to-end.
 - JavaScript (business logic node)
 
 ## How to Use
-1. Download `sabana_workflow.json`
+1. Download `sabana-b2b-supply-chain-automation.json`
 2. Open your n8n instance
 3. Click **Import** and select the JSON file
 4. Configure your own credentials (Google Sheets, Telegram, Gmail)
