@@ -1,0 +1,389 @@
+{
+  "name": "sabana-b2b-supply-chain-automation",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Mengambil seluruh baris data dari node Google Sheets sebelumnya\nconst allRows = $('Get row(s) in sheet').all();\n\n// Hanya mengembalikan 1 baris paling terakhir (pesanan terbaru)\nreturn allRows[allRows.length - 1];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        144
+      ],
+      "id": "b1e17d02-a564-4162-8efb-2832d7f94a82",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "final-project-emerging-paymentnotification",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -912,
+        336
+      ],
+      "id": "8e7d2ba9-1118-45ba-ac54-c9d7d51d1510",
+      "name": "Webhook1",
+      "webhookId": "b81f2424-f6ea-4998-a58c-80f2aa1dab2d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "35023f88-7f5d-47ad-9ab5-ee7e924ecada",
+              "leftValue": "={{ $json['Sisa_Stok_Sekarang '] }}",
+              "rightValue": "={{ $json['Batas_Minimum '] }}",
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -208,
+        -48
+      ],
+      "id": "800d3bae-f4b5-4a99-bfd6-8eb7e0a8c050",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        80,
+        -64
+      ],
+      "id": "80e30891-dd36-4025-b4d5-3d3ad4d2a688",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "final-project-emerging",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1312,
+        144
+      ],
+      "id": "8f3f22a0-dd01-413e-88a7-015135a9d30a",
+      "name": "Pesanan_masuk",
+      "webhookId": "cc0545ab-5986-4cae-a372-e67cdbb494a3"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1104,
+        144
+      ],
+      "id": "e223a79e-1d26-4573-9892-29dcc52bb032",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "8bKIVkBTWpOCHgrS",
+          "name": "N8N2_project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -896,
+        144
+      ],
+      "id": "eef8c454-1070-4900-b197-e7cc9f152fbe",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleApi": {
+          "id": "8bKIVkBTWpOCHgrS",
+          "name": "N8N2_project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -400,
+        320
+      ],
+      "id": "e2b8cc34-51a5-45af-b5e8-ceb00180e59b",
+      "name": "Send an Email1",
+      "webhookId": "85c486b5-eb73-4c56-8d46-a1dd9b2f3a53",
+      "credentials": {
+        "smtp": {
+          "id": "bxPgXCuSEv70zCJ2",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        144
+      ],
+      "id": "54c073aa-675b-44fa-9bf3-f55387ee069e",
+      "name": "Send a text message2",
+      "webhookId": "7aab97c6-7735-423c-856b-2060c970d5c5",
+      "credentials": {
+        "telegramApi": {
+          "id": "UK782D8blE8Nlljt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -400,
+        -48
+      ],
+      "id": "4b02e5f2-a24b-40c8-a96b-9fa63d0bc62f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "8bKIVkBTWpOCHgrS",
+          "name": "N8N2_project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        160
+      ],
+      "id": "a8945949-94a9-44a2-a978-992247840b17",
+      "name": "Send a text message1",
+      "webhookId": "15d977b0-87a9-4bbd-a6bd-fb6c19415d2b",
+      "credentials": {
+        "telegramApi": {
+          "id": "UK782D8blE8Nlljt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -704,
+        336
+      ],
+      "id": "e8965e25-e28f-4a4c-b884-eeb3cdcf6bf0",
+      "name": "Append or update row in sheet1",
+      "credentials": {
+        "googleApi": {
+          "id": "8bKIVkBTWpOCHgrS",
+          "name": "N8N2_project"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pesanan_masuk": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4cec4708-0cf2-42f2-8483-277de827f79f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8142d21413ce389e9d659c31c4c0179057889b5a15d910c0c721213f7f734301"
+  },
+  "id": "hzgxoMOCWC5n5aJK",
+  "tags": []
+}
