@@ -25,7 +25,9 @@ procurement cycle end-to-end.
 8. **Get row(s) in sheet** — Retrieves current inventory data
 9. **Send a text message** — Alert triggered if stock falls below minimum
 10. **Send an Email** — Automated payment verification email dispatched
+
 ![Workflow Overview](workflow_screenshot.png)
+
 ## Tech Stack
 - n8n (workflow automation)
 - Google Sheets API
